@@ -8,6 +8,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/components/ui/sidebar";
 import { Input } from "./ui/input";
 import { Bookmark, Search } from "lucide-react";
@@ -18,21 +19,20 @@ import { Button } from "./ui/button";
 
 export function AppSidebar() {
 	const navigate = useNavigate();
+	const { isMobile, setOpenMobile } = useSidebar();
 	const { pathname } = useLocation();
 	const searchRef = useRef<HTMLInputElement | null>(null);
-	const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.code === "Enter" && searchRef.current) {
-			const { value } = searchRef.current;
-			if (value.trim().length > 0) {
-				navigate(`/search/${decodeURI(value)}`);
-			}
-		}
-	};
 	const onSubmitHandler = (e: FormEvent) => {
 		e.preventDefault();
 		if (searchRef.current && searchRef.current.value.trim().length > 0) {
 			const { value } = searchRef.current;
 			navigate(`/search/${decodeURI(value)}`);
+			sidebarMenuButtonClickHandler();
+		}
+	};
+	const sidebarMenuButtonClickHandler = () => {
+		if (isMobile) {
+			setOpenMobile(false);
 		}
 	};
 	return (
@@ -42,9 +42,9 @@ export function AppSidebar() {
 					<Input
 						placeholder="Search news ..."
 						className="pr-9"
-						onKeyDown={onKeyDownHandler}
 						ref={searchRef}
 						autoFocus={false}
+						tabIndex={-1}
 					/>
 					<Button
 						variant="ghost"
@@ -61,7 +61,11 @@ export function AppSidebar() {
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SidebarMenuItem>
-								<SidebarMenuButton asChild isActive={pathname === "/bookmark"}>
+								<SidebarMenuButton
+									asChild
+									isActive={pathname === "/bookmark"}
+									onClick={sidebarMenuButtonClickHandler}
+								>
 									<Link to="/bookmark">
 										<Bookmark className="fill-primary text-primary" />
 										<span>Bookmarked</span>
@@ -77,7 +81,11 @@ export function AppSidebar() {
 						<SidebarMenu>
 							{newsCategories.map((item) => (
 								<SidebarMenuItem key={item.title}>
-									<SidebarMenuButton asChild isActive={pathname === item.href}>
+									<SidebarMenuButton
+										asChild
+										isActive={pathname === item.href}
+										onClick={sidebarMenuButtonClickHandler}
+									>
 										<Link to={item.href}>
 											<item.icon />
 											<span>{item.title}</span>
