@@ -12,8 +12,9 @@ import {
 import { Input } from "./ui/input";
 import { Bookmark, Search } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { FormEvent, useRef } from "react";
 import { newsCategories } from "@/lib/category";
+import { Button } from "./ui/button";
 
 export function AppSidebar() {
 	const navigate = useNavigate();
@@ -27,20 +28,32 @@ export function AppSidebar() {
 			}
 		}
 	};
+	const onSubmitHandler = (e: FormEvent) => {
+		e.preventDefault();
+		if (searchRef.current && searchRef.current.value.trim().length > 0) {
+			const { value } = searchRef.current;
+			navigate(`/search/${decodeURI(value)}`);
+		}
+	};
 	return (
 		<Sidebar>
 			<SidebarHeader className="relative mt-2">
-				<Input
-					placeholder="Search news ..."
-					className="pr-8"
-					onKeyDown={onKeyDownHandler}
-					ref={searchRef}
-				/>
-				<Search
-					absoluteStrokeWidth
-					size={16}
-					className="absolute right-4 text-gray-500 top-[50%] -translate-y-[50%]"
-				/>
+				<form onSubmit={onSubmitHandler}>
+					<Input
+						placeholder="Search news ..."
+						className="pr-9"
+						onKeyDown={onKeyDownHandler}
+						ref={searchRef}
+						autoFocus={false}
+					/>
+					<Button
+						variant="ghost"
+						size="sm"
+						className="absolute right-2 text-gray-500 top-[50%] -translate-y-[50%]"
+					>
+						<Search absoluteStrokeWidth size={16} />
+					</Button>
+				</form>
 			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>
