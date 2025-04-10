@@ -36,8 +36,8 @@ export function AppSidebar() {
 		}
 	};
 	return (
-		<Sidebar>
-			<SidebarHeader className="relative mt-2">
+		<Sidebar collapsible="icon">
+			<SidebarHeader className="relative mt-2 group-data-[collapsible=icon]:hidden">
 				<form onSubmit={onSubmitHandler}>
 					<Input
 						placeholder="Search news ..."
@@ -65,6 +65,7 @@ export function AppSidebar() {
 									asChild
 									isActive={pathname === "/bookmark"}
 									onClick={sidebarMenuButtonClickHandler}
+									tooltip="Bookmarked"
 								>
 									<Link to="/bookmark">
 										<Bookmark className="fill-primary text-primary" />
@@ -85,6 +86,7 @@ export function AppSidebar() {
 										asChild
 										isActive={pathname === item.href}
 										onClick={sidebarMenuButtonClickHandler}
+										tooltip={item.title}
 									>
 										<Link to={item.href}>
 											<item.icon />
