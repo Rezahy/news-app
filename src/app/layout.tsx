@@ -3,6 +3,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "sonner";
 import { useTheme } from "@/providers/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
+import Footer from "@/components/footer";
 
 export default function Layout({
 	children,
@@ -11,16 +12,19 @@ export default function Layout({
 }>) {
 	const { theme } = useTheme();
 	return (
-		<SidebarProvider>
-			<AppSidebar />
-			<main className="w-screen">
-				<SidebarTrigger className="mt-5 ml-5" />
-				<section className="max-w-6xl mx-auto">{children}</section>
-			</main>
-			<div className="absolute top-5 right-5">
-				<ModeToggle />
-			</div>
+		<>
+			<SidebarProvider>
+				<AppSidebar />
+				<main className="w-screen">
+					<SidebarTrigger className="mt-5 ml-5" />
+					<section className="max-w-6xl mx-auto">{children}</section>
+				</main>
+				<div className="absolute top-5 right-5">
+					<ModeToggle />
+				</div>
+			</SidebarProvider>
 			<Toaster theme={theme} />
-		</SidebarProvider>
+			<Footer />
+		</>
 	);
 }
